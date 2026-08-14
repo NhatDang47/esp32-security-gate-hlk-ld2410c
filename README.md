@@ -199,6 +199,3 @@ Cảm biến giao tiếp với vi điều khiển qua chuẩn UART. Giao thức 
   <img src="picture/Hình 12 từ thiết kế đến thi công.png" alt="Mạch PCB" width="45%" class="hero-img" />
 </p>
 
-<blockquote>
-<b>Lưu ý tích hợp:</b> Tham khảo cấu hình điều khiển trung tâm tại nhánh <b>Node-RED</b> để hoàn thiện hệ thống quản trị.
-</blockquote>
