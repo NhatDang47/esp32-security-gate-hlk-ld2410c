@@ -1,120 +1,11 @@
-<style>
-:root {
-  --ctp-rosewater: #f5e0dc;
-  --ctp-flamingo: #f2cdcd;
-  --ctp-pink: #f5c2e7;
-  --ctp-mauve: #cba6f7;
-  --ctp-red: #f38ba8;
-  --ctp-maroon: #eba0ac;
-  --ctp-peach: #fab387;
-  --ctp-yellow: #f9e2af;
-  --ctp-green: #a6e3a1;
-  --ctp-teal: #94e2d5;
-  --ctp-sky: #89dceb;
-  --ctp-sapphire: #74c7ec;
-  --ctp-blue: #89b4fa;
-  --ctp-lavender: #b4befe;
-  --ctp-text: #cdd6f4;
-  --ctp-subtext1: #bac2de;
-  --ctp-subtext0: #a6adc8;
-  --ctp-overlay2: #9399b2;
-  --ctp-overlay1: #7f849c;
-  --ctp-overlay0: #6c7086;
-  --ctp-surface2: #585b70;
-  --ctp-surface1: #45475a;
-  --ctp-surface0: #313244;
-  --ctp-base: #1e1e2e;
-  --ctp-mantle: #181825;
-}
-
-body {
-  background-color: var(--ctp-base);
-  color: var(--ctp-text);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  line-height: 1.6;
-}
-.gradient-text {
-  background: linear-gradient(90deg, var(--ctp-mauve), var(--ctp-pink), var(--ctp-flamingo));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-weight: 800;
-  border-bottom: none;
-}
-h2, h3, h4 { 
-  color: var(--ctp-mauve); 
-  border-bottom: 2px solid var(--ctp-surface1); 
-  padding-bottom: 5px; 
-  margin-top: 25px;
-}
-a { color: var(--ctp-sapphire); text-decoration: none; font-weight: 600; transition: all 0.3s ease; }
-a:hover { color: var(--ctp-sky); text-decoration: underline; }
-code { 
-  background-color: var(--ctp-surface0); 
-  color: var(--ctp-peach); 
-  padding: 3px 6px; 
-  border-radius: 6px; 
-  font-family: 'Consolas', monospace;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-pre { 
-  background-color: var(--ctp-mantle); 
-  border: 1px solid var(--ctp-surface1); 
-  border-left: 4px solid var(--ctp-mauve); 
-  padding: 15px; 
-  border-radius: 8px; 
-  box-shadow: inset 0 2px 10px rgba(0,0,0,0.2);
-}
-table { 
-  border-collapse: collapse; 
-  width: 100%; 
-  margin: 20px 0; 
-  background-color: var(--ctp-mantle);
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-}
-th, td { 
-  border: 1px solid var(--ctp-surface0); 
-  padding: 12px 15px; 
-  text-align: center; 
-}
-th { background-color: var(--ctp-surface1); color: var(--ctp-sapphire); font-weight: bold; }
-tr:nth-child(even) { background-color: var(--ctp-base); }
-tr:hover { background-color: var(--ctp-surface0); transition: background-color 0.2s; }
-blockquote { 
-  border-left: 4px solid var(--ctp-green); 
-  background: linear-gradient(90deg, var(--ctp-surface0), transparent);
-  padding: 15px 20px; 
-  margin: 20px 0; 
-  border-radius: 0 8px 8px 0; 
-  color: var(--ctp-subtext1); 
-  font-style: italic;
-}
-.hero-img {
-  border-radius: 12px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.4);
-  transition: transform 0.3s;
-}
-.hero-img:hover {
-  transform: scale(1.02);
-}
-.branch-btn {
-  display: inline-block;
-  margin: 10px 0;
-  transition: transform 0.2s;
-}
-.branch-btn:hover {
-  transform: translateY(-2px);
-}
-</style>
 
 <div align="center">
-  <img src="picture/Hình 1 cảm biến Radar HLK-LD2410C.png" width="220" alt="HLK-LD2410C" class="hero-img" />
-  <h1 class="gradient-text">ESP32 Security Gate & People Counter</h1>
+  <img src="picture/Hình 1 cảm biến Radar HLK-LD2410C.png" width="220" alt="HLK-LD2410C" />
+  <h1>ESP32 Security Gate & People Counter</h1>
   <p><i>Hệ thống giám sát cửa an ninh và đếm người sử dụng cảm biến Radar HLK-LD2410C</i></p>
   
   <p>
-    <a href="https://github.com/NhatDang47/esp32-security-gate-hlk-ld2410c/tree/node-red" class="branch-btn">
+    <a href="https://github.com/NhatDang47/esp32-security-gate-hlk-ld2410c/tree/node-red">
       <img src="https://img.shields.io/badge/Branch-Node--RED-8F0000?style=for-the-badge&logo=nodered&logoColor=white" alt="Node-RED Branch" />
     </a>
   </p>
@@ -149,13 +40,13 @@ Mục đích chính của dự án là phục vụ ứng dụng cảnh báo ch�
 ## 🧱 Sơ đồ Khối & Nguyên lý
 
 <p align="center">
-  <img src="picture/Hình 5 Sơ đồ khối hệ thống.png" alt="Sơ đồ khối" width="550" class="hero-img"/>
+  <img src="picture/Hình 5 Sơ đồ khối hệ thống.png" alt="Sơ đồ khối" width="550" />
   <br/>
   <i>Sơ đồ khối chức năng hệ thống</i>
 </p>
 <br/>
 <p align="center">
-  <img src="picture/Hình 6 sơ đồ nguyên lý.png" alt="Sơ đồ nguyên lý" width="550" class="hero-img"/>
+  <img src="picture/Hình 6 sơ đồ nguyên lý.png" alt="Sơ đồ nguyên lý" width="550" />
   <br/>
   <i>Sơ đồ nguyên lý kết nối phần cứng</i>
 </p>
@@ -196,6 +87,6 @@ Cảm biến giao tiếp với vi điều khiển qua chuẩn UART. Giao thức 
 
 <p align="center">
   <img src="picture/Hình 12 từ thiết kế đến thi công.jpg" alt="Thực tế thi công" width="45%" class="hero-img" style="margin-right: 15px;" />
-  <img src="picture/Hình 12 từ thiết kế đến thi công.png" alt="Mạch PCB" width="45%" class="hero-img" />
+  <img src="picture/Hình 12 từ thiết kế đến thi công.png" alt="Mạch PCB" width="45%" />
 </p>
 
