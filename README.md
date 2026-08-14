@@ -1,6 +1,6 @@
 
 <div align="center">
-  <img src="../picture/Hình 13 Code và giao diện Node-red.png" width="650" alt="Node-RED UI" />
+  <img src="picture/Hình 13 Code và giao diện Node-red.png" width="650" alt="Node-RED UI" />
   <h1>Node-RED Dashboard & Flow</h1>
   <p><i>Giao diện điều khiển trung tâm và giám sát trực quan cho hệ thống cửa an ninh</i></p>
   
@@ -57,7 +57,7 @@ Trong cấu trúc hệ thống, vi điều khiển ESP32 (Edge device) xử lý 
 Giao diện cung cấp giải pháp phân tích chi tiết dữ liệu không gian và phản xạ từ cảm biến theo miền thời gian, hỗ trợ người dùng hiệu chỉnh hệ số thuật toán một cách linh hoạt.
 
 <p align="center">
-  <img src="../picture/Hình 17 Biểu đồ sự kiện vàora.png" alt="Biểu đồ sự kiện" width="650" />
+  <img src="picture/Hình 17 Biểu đồ sự kiện vàora.png" alt="Biểu đồ sự kiện" width="650" />
   <br/>
   <i>Đồ thị biểu diễn thông số sự kiện vào/ra thu nhận từ Radar</i>
 </p>
