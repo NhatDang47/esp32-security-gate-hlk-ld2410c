@@ -1,103 +1,11 @@
-<style>
-:root {
-  --ctp-rosewater: #f5e0dc;
-  --ctp-flamingo: #f2cdcd;
-  --ctp-pink: #f5c2e7;
-  --ctp-mauve: #cba6f7;
-  --ctp-red: #f38ba8;
-  --ctp-maroon: #eba0ac;
-  --ctp-peach: #fab387;
-  --ctp-yellow: #f9e2af;
-  --ctp-green: #a6e3a1;
-  --ctp-teal: #94e2d5;
-  --ctp-sky: #89dceb;
-  --ctp-sapphire: #74c7ec;
-  --ctp-blue: #89b4fa;
-  --ctp-lavender: #b4befe;
-  --ctp-text: #cdd6f4;
-  --ctp-subtext1: #bac2de;
-  --ctp-subtext0: #a6adc8;
-  --ctp-overlay2: #9399b2;
-  --ctp-overlay1: #7f849c;
-  --ctp-overlay0: #6c7086;
-  --ctp-surface2: #585b70;
-  --ctp-surface1: #45475a;
-  --ctp-surface0: #313244;
-  --ctp-base: #1e1e2e;
-  --ctp-mantle: #181825;
-}
-
-body {
-  background-color: var(--ctp-base);
-  color: var(--ctp-text);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  line-height: 1.6;
-}
-.gradient-text {
-  background: linear-gradient(90deg, var(--ctp-sky), var(--ctp-sapphire), var(--ctp-blue));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-weight: 800;
-  border-bottom: none;
-}
-h2, h3, h4 { 
-  color: var(--ctp-sapphire); 
-  border-bottom: 2px solid var(--ctp-surface1); 
-  padding-bottom: 5px; 
-  margin-top: 25px;
-}
-a { color: var(--ctp-mauve); text-decoration: none; font-weight: 600; transition: all 0.3s ease; }
-a:hover { color: var(--ctp-pink); text-decoration: underline; }
-code { 
-  background-color: var(--ctp-surface0); 
-  color: var(--ctp-green); 
-  padding: 3px 6px; 
-  border-radius: 6px; 
-  font-family: 'Consolas', monospace;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-pre { 
-  background-color: var(--ctp-mantle); 
-  border: 1px solid var(--ctp-surface1); 
-  border-left: 4px solid var(--ctp-sapphire); 
-  padding: 15px; 
-  border-radius: 8px; 
-  box-shadow: inset 0 2px 10px rgba(0,0,0,0.2);
-}
-blockquote { 
-  border-left: 4px solid var(--ctp-teal); 
-  background: linear-gradient(90deg, var(--ctp-surface0), transparent);
-  padding: 15px 20px; 
-  margin: 20px 0; 
-  border-radius: 0 8px 8px 0; 
-  color: var(--ctp-subtext1); 
-  font-style: italic;
-}
-.hero-img {
-  border-radius: 12px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.4);
-  transition: transform 0.3s;
-}
-.hero-img:hover {
-  transform: scale(1.02);
-}
-.branch-btn {
-  display: inline-block;
-  margin: 10px 0;
-  transition: transform 0.2s;
-}
-.branch-btn:hover {
-  transform: translateY(-2px);
-}
-</style>
 
 <div align="center">
-  <img src="../picture/Hình 13 Code và giao diện Node-red.png" width="650" alt="Node-RED UI" class="hero-img" />
-  <h1 class="gradient-text">Node-RED Dashboard & Flow</h1>
+  <img src="../picture/Hình 13 Code và giao diện Node-red.png" width="650" alt="Node-RED UI" />
+  <h1>Node-RED Dashboard & Flow</h1>
   <p><i>Giao diện điều khiển trung tâm và giám sát trực quan cho hệ thống cửa an ninh</i></p>
   
   <p>
-    <a href="https://github.com/NhatDang47/esp32-security-gate-hlk-ld2410c/tree/main" class="branch-btn">
+    <a href="https://github.com/NhatDang47/esp32-security-gate-hlk-ld2410c/tree/main">
       <img src="https://img.shields.io/badge/Branch-Main_(ESP32)-00599C?style=for-the-badge&logo=espressif&logoColor=white" alt="Main Branch" />
     </a>
   </p>
@@ -149,7 +57,7 @@ Trong cấu trúc hệ thống, vi điều khiển ESP32 (Edge device) xử lý 
 Giao diện cung cấp giải pháp phân tích chi tiết dữ liệu không gian và phản xạ từ cảm biến theo miền thời gian, hỗ trợ người dùng hiệu chỉnh hệ số thuật toán một cách linh hoạt.
 
 <p align="center">
-  <img src="../picture/Hình 17 Biểu đồ sự kiện vàora.png" alt="Biểu đồ sự kiện" width="650" class="hero-img" />
+  <img src="../picture/Hình 17 Biểu đồ sự kiện vàora.png" alt="Biểu đồ sự kiện" width="650" />
   <br/>
   <i>Đồ thị biểu diễn thông số sự kiện vào/ra thu nhận từ Radar</i>
 </p>
