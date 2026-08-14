@@ -154,6 +154,3 @@ Giao diện cung cấp giải pháp phân tích chi tiết dữ liệu không gi
   <i>Đồ thị biểu diễn thông số sự kiện vào/ra thu nhận từ Radar</i>
 </p>
 
-<blockquote>
-<b>Tích hợp liên kết:</b> Mã nguồn chương trình nhúng chi tiết được lưu trữ tại nhánh <b>main</b>. Vui lòng chuyển nhánh để truy xuất thông tin nền tảng phần cứng ESP32.
-</blockquote>
