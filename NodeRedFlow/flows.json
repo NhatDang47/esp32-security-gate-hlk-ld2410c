@@ -1,0 +1,852 @@
+[
+    {
+        "id": "f2341ea2c16839d8",
+        "type": "tab",
+        "label": "Cổng An Ninh",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "ae9ab28e21a26c48",
+        "type": "aedes broker",
+        "z": "f2341ea2c16839d8",
+        "name": "MQTT Broker :1884",
+        "mqtt_port": 1884,
+        "mqtt_ws_port": 8883,
+        "usetls": false,
+        "x": 130,
+        "y": 60,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "db14b2e0d41db462",
+        "type": "mqtt in",
+        "z": "f2341ea2c16839d8",
+        "name": "gate/telemetry",
+        "topic": "gate/telemetry",
+        "qos": "1",
+        "datatype": "utf8",
+        "broker": "broker_cfg",
+        "inputs": 0,
+        "x": 130,
+        "y": 140,
+        "wires": [
+            [
+                "4293ebdfece088d2"
+            ]
+        ]
+    },
+    {
+        "id": "4293ebdfece088d2",
+        "type": "json",
+        "z": "f2341ea2c16839d8",
+        "name": "Parse JSON",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 290,
+        "y": 140,
+        "wires": [
+            [
+                "636ab974bc6864e5",
+                "4a6848608042f877",
+                "9b03d46ea564365b"
+            ]
+        ]
+    },
+    {
+        "id": "9b03d46ea564365b",
+        "type": "debug",
+        "z": "f2341ea2c16839d8",
+        "name": "RAW payload",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "x": 500,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "636ab974bc6864e5",
+        "type": "function",
+        "z": "f2341ea2c16839d8",
+        "name": "Route to SCADA UI",
+        "func": "var p = msg.payload;\nif (!p) return null;\n\nvar action = p.action || 'TRONG';\nvar distance = p.distance !== undefined ? p.distance : 0;\nvar energy = p.energy !== undefined ? p.energy : 0;\nvar cin = p.count_in !== undefined ? p.count_in : 0;\nvar cout = p.count_out !== undefined ? p.count_out : 0;\n\nvar overview = { action: action, distance: distance };\nvar counters = { cin: cin, cout: cout };\n\nreturn [\n  { payload: overview },\n  { payload: distance },\n  { payload: energy },\n  { payload: counters }\n];\n",
+        "outputs": 4,
+        "x": 510,
+        "y": 140,
+        "wires": [
+            [
+                "6509c31be4b5abb0"
+            ],
+            [
+                "9988b0df213a587a"
+            ],
+            [
+                "d8497f5c0d4c4f68"
+            ],
+            [
+                "a892de8e8749d222"
+            ]
+        ]
+    },
+    {
+        "id": "6509c31be4b5abb0",
+        "type": "ui_template",
+        "z": "f2341ea2c16839d8",
+        "group": "grp_overview",
+        "name": "Status Monitor",
+        "order": 1,
+        "width": "12",
+        "height": "7",
+        "format": "<div style=\"background-color: #ffffff; padding: 20px; border-radius: 8px; text-align: center; border: 1px solid #c0c0c0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; box-shadow: 0 4px 10px rgba(0,0,0,0.1);\">\n  <div style=\"display: flex; align-items: center; justify-content: center; margin-bottom: 20px; border-bottom: 2px solid #0056b3; padding-bottom: 10px;\">\n    <div style=\"flex: 1; text-align: left;\">\n      <h2 style=\"color: #0056b3; margin: 0; font-size: 20px; font-weight: bold;\">TRƯỜNG BÁCH KHOA</h2>\n      <h3 style=\"color: #333; margin: 5px 0 0 0; font-size: 16px;\">ĐẠI HỌC CẦN THƠ</h3>\n    </div>\n    <div style=\"flex: 1; text-align: right;\">\n      <h3 style=\"color: #ff6600; margin: 0; font-size: 18px; font-weight: bold;\">KHOA TỰ ĐỘNG HÓA</h3>\n    </div>\n  </div>\n  \n  <div ng-if=\"msg.payload.action == 'VAO'\" style=\"background-color: #e6f9e6; border: 2px solid #28a745; color: #28a745; padding: 30px; border-radius: 10px; margin-top: 15px; box-shadow: 0 0 15px rgba(40, 167, 69, 0.4);\">\n    <h1 style=\"margin: 0; font-size: 36px; font-weight: 900;\">&#10132; KHÁCH ĐANG VÀO</h1>\n    <p style=\"margin: 10px 0 0 0; font-size: 18px;\">Hệ thống ghi nhận luồng đi vào</p>\n  </div>\n  \n  <div ng-if=\"msg.payload.action == 'RA'\" style=\"background-color: #e6f0ff; border: 2px solid #0056b3; color: #0056b3; padding: 30px; border-radius: 10px; margin-top: 15px; box-shadow: 0 0 15px rgba(0, 86, 179, 0.4);\">\n    <h1 style=\"margin: 0; font-size: 36px; font-weight: 900;\">&#11013; KHÁCH ĐANG RA</h1>\n    <p style=\"margin: 10px 0 0 0; font-size: 18px;\">Hệ thống ghi nhận luồng đi ra</p>\n  </div>\n\n  <div ng-if=\"msg.payload.action == 'ALARM_STATIC'\" style=\"background-color: #ffe6e6; border: 3px solid #dc3545; color: #dc3545; padding: 30px; border-radius: 10px; margin-top: 15px; box-shadow: 0 0 20px rgba(220, 53, 69, 0.6); animation: blinker 1s linear infinite;\">\n    <h1 style=\"margin: 0; font-size: 36px; font-weight: 900;\">&#9888; CẢNH BÁO ĐỨNG IM</h1>\n    <p style=\"margin: 10px 0 0 0; font-size: 18px; font-weight: bold;\">Phát hiện vật cản ở khoảng cách {{msg.payload.distance}} cm!</p>\n  </div>\n  \n  <div ng-if=\"msg.payload.action != 'VAO' && msg.payload.action != 'RA' && msg.payload.action != 'ALARM_STATIC'\" style=\"background-color: #f8f9fa; border: 2px solid #6c757d; color: #6c757d; padding: 30px; border-radius: 10px; margin-top: 15px;\">\n    <h1 style=\"margin: 0; font-size: 36px; font-weight: 900;\">&#10003; SẴN SÀNG</h1>\n    <p style=\"margin: 10px 0 0 0; font-size: 18px;\">Khu vực kiểm soát đang trống</p>\n  </div>\n</div>\n\n<style>\n@keyframes blinker {\n  50% { opacity: 0.6; box-shadow: 0 0 10px rgba(220, 53, 69, 1); }\n}\n</style>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 750,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9988b0df213a587a",
+        "type": "ui_gauge",
+        "z": "f2341ea2c16839d8",
+        "name": "Distance Gauge",
+        "group": "grp_radar",
+        "order": 1,
+        "width": "6",
+        "height": "4",
+        "gtype": "gage",
+        "title": "KHOẢNG CÁCH CẢN TRỞ",
+        "label": "cm",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 800,
+        "colors": [
+            "#28a745",
+            "#ffc107",
+            "#dc3545"
+        ],
+        "seg1": "200",
+        "seg2": "600",
+        "x": 750,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "d8497f5c0d4c4f68",
+        "type": "ui_gauge",
+        "z": "f2341ea2c16839d8",
+        "name": "Energy Gauge",
+        "group": "grp_radar",
+        "order": 2,
+        "width": "6",
+        "height": "4",
+        "gtype": "donut",
+        "title": "NĂNG LƯỢNG CHUYỂN ĐỘNG",
+        "label": "%",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 100,
+        "colors": [
+            "#0056b3",
+            "#28a745",
+            "#dc3545"
+        ],
+        "seg1": "20",
+        "seg2": "80",
+        "x": 750,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "a892de8e8749d222",
+        "type": "ui_template",
+        "z": "f2341ea2c16839d8",
+        "group": "grp_counter",
+        "name": "Counters",
+        "order": 1,
+        "width": "12",
+        "height": "4",
+        "format": "<div style=\"display: flex; justify-content: space-between; gap: 20px; font-family: 'Segoe UI', sans-serif; padding: 10px;\">\n  <div style=\"flex: 1; background: #ffffff; border: 2px solid #28a745; border-radius: 8px; padding: 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1);\">\n    <h3 style=\"color: #28a745; margin: 0 0 15px 0; font-size: 18px; font-weight: bold;\">TỔNG LƯỢT VÀO</h3>\n    <div style=\"font-size: 58px; font-weight: bold; color: #28a745; background: #f0fdf4; border-radius: 5px; padding: 10px; font-family: monospace; letter-spacing: 5px;\">\n      {{msg.payload.cin !== undefined ? msg.payload.cin : '0'}}\n    </div>\n  </div>\n  \n  <div style=\"flex: 1; background: #ffffff; border: 2px solid #0056b3; border-radius: 8px; padding: 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1);\">\n    <h3 style=\"color: #0056b3; margin: 0 0 15px 0; font-size: 18px; font-weight: bold;\">TỔNG LƯỢT RA</h3>\n    <div style=\"font-size: 58px; font-weight: bold; color: #0056b3; background: #e6f0ff; border-radius: 5px; padding: 10px; font-family: monospace; letter-spacing: 5px;\">\n      {{msg.payload.cout !== undefined ? msg.payload.cout : '0'}}\n    </div>\n  </div>\n</div>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "x": 750,
+        "y": 200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4a6848608042f877",
+        "type": "function",
+        "z": "f2341ea2c16839d8",
+        "name": "Build SQL INSERT",
+        "func": "var p = msg.payload;\nif (!p || !p.action) return null;\nvar act = p.action;\nvar dist = p.distance || 0;\nvar enrg = p.energy || 0;\nvar tz = (new Date()).getTimezoneOffset() * 60000;\nvar localTime = (new Date(Date.now() - tz)).toISOString().replace('T', ' ').substring(0, 19);\nmsg.topic = \"INSERT INTO security_logs (time, action, distance, energy) VALUES ('\" + localTime + \"', '\" + act + \"', \" + dist + \", \" + enrg + \")\";\nreturn msg;\n",
+        "outputs": 1,
+        "x": 610,
+        "y": 260,
+        "wires": [
+            [
+                "f0eafd20b06048bd"
+            ]
+        ]
+    },
+    {
+        "id": "f0eafd20b06048bd",
+        "type": "sqlite",
+        "z": "f2341ea2c16839d8",
+        "mydb": "sqlite_db",
+        "sqlquery": "msg.topic",
+        "sql": "",
+        "name": "Write DB",
+        "x": 820,
+        "y": 300,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b2dd7b69177d11cc",
+        "type": "inject",
+        "z": "f2341ea2c16839d8",
+        "name": "Create table",
+        "props": [
+            {
+                "p": "topic",
+                "v": "CREATE TABLE IF NOT EXISTS security_logs (id INTEGER PRIMARY KEY AUTOINCREMENT, time DATETIME DEFAULT CURRENT_TIMESTAMP, action TEXT, distance INTEGER, energy INTEGER)",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "once": true,
+        "onceDelay": "1",
+        "x": 110,
+        "y": 240,
+        "wires": [
+            [
+                "a6ed3eaa5ff3c02f"
+            ]
+        ]
+    },
+    {
+        "id": "a6ed3eaa5ff3c02f",
+        "type": "sqlite",
+        "z": "f2341ea2c16839d8",
+        "mydb": "sqlite_db",
+        "sqlquery": "msg.topic",
+        "sql": "",
+        "name": "Init DB",
+        "x": 330,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7a36c5d7c0c97441",
+        "type": "ui_template",
+        "z": "f2341ea2c16839d8",
+        "group": "grp_charts",
+        "name": "Date Picker",
+        "order": 1,
+        "width": "12",
+        "height": "2",
+        "format": "<div style=\"display: flex; align-items: center; justify-content: center; gap: 15px; padding: 15px; background: #ffffff; border-radius: 8px; border: 1px solid #c0c0c0; box-shadow: 0 4px 10px rgba(0,0,0,0.1);\">\n  <label style=\"font-weight: bold; color: #0056b3; font-size: 18px;\">CHỌN NGÀY XEM BIỂU ĐỒ:</label>\n  <input type=\"date\" id=\"chartDate\" style=\"padding: 10px; border-radius: 6px; border: 2px solid #0056b3; font-size: 16px; color: #333; outline: none; cursor: pointer; transition: 0.3s;\" onfocus=\"this.style.boxShadow='0 0 8px rgba(0,86,179,0.5)'\" onblur=\"this.style.boxShadow='none'\">\n</div>\n<script>\n(function(scope) {\n  setTimeout(function() {\n    var el = document.getElementById('chartDate');\n    el.addEventListener('change', function() {\n        scope.send({payload: el.value});\n    });\n    if(!el.value) {\n      var tzOffset = (new Date()).getTimezoneOffset() * 60000;\n      var today = (new Date(Date.now() - tzOffset)).toISOString().split('T')[0];\n      el.value = today;\n      scope.send({payload: today});\n    }\n  }, 500);\n})(scope);\n</script>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "x": 190,
+        "y": 520,
+        "wires": [
+            [
+                "cebc5002d8f29c44"
+            ]
+        ]
+    },
+    {
+        "id": "18899ffd6c03b24b",
+        "type": "inject",
+        "z": "f2341ea2c16839d8",
+        "name": "Poll Chart 5s",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "poll",
+        "payloadType": "str",
+        "x": 180,
+        "y": 600,
+        "wires": [
+            [
+                "cebc5002d8f29c44"
+            ]
+        ]
+    },
+    {
+        "id": "cebc5002d8f29c44",
+        "type": "function",
+        "z": "f2341ea2c16839d8",
+        "name": "Build Hourly Query",
+        "func": "var date = flow.get('chartDate');\nif (msg.payload && typeof msg.payload === 'string' && msg.payload.match(/^\\d{4}-\\d{2}-\\d{2}$/)) {\n    date = msg.payload;\n    flow.set('chartDate', date);\n}\nif (!date) {\n    var tzOffset = (new Date()).getTimezoneOffset() * 60000;\n    date = (new Date(Date.now() - tzOffset)).toISOString().split('T')[0];\n    flow.set('chartDate', date);\n}\nmsg.topic = \"SELECT strftime('%H', time) as h, SUM(CASE WHEN action='VAO' THEN 1 ELSE 0 END) as vao, SUM(CASE WHEN action='RA' THEN 1 ELSE 0 END) as ra FROM security_logs WHERE date(time) = '\" + date + \"' GROUP BY h ORDER BY h ASC\";\nmsg.payload = null;\nreturn msg;\n",
+        "outputs": 1,
+        "x": 390,
+        "y": 560,
+        "wires": [
+            [
+                "73a5afab93308e63"
+            ]
+        ]
+    },
+    {
+        "id": "73a5afab93308e63",
+        "type": "sqlite",
+        "z": "f2341ea2c16839d8",
+        "mydb": "sqlite_db",
+        "sqlquery": "msg.topic",
+        "sql": "",
+        "name": "Query Data",
+        "x": 590,
+        "y": 560,
+        "wires": [
+            [
+                "2aaf05413f0dd9c7"
+            ]
+        ]
+    },
+    {
+        "id": "2aaf05413f0dd9c7",
+        "type": "function",
+        "z": "f2341ea2c16839d8",
+        "name": "Format for Chart Node",
+        "func": "var rows = msg.payload;\nvar series = [\"Lượt Vào\", \"Lượt Ra\"];\nvar data = [[], []];\nvar labels = [];\n\nfor(var i=0; i<24; i++) {\n  var h = (i<10?'0':'') + i;\n  labels.push(h + ':00');\n  data[0].push(0);\n  data[1].push(0);\n}\n\nif(rows && rows.length > 0) {\n  rows.forEach(function(r) {\n    var hourIdx = parseInt(r.h, 10);\n    data[0][hourIdx] = r.vao || 0;\n    data[1][hourIdx] = r.ra || 0;\n  });\n}\n\nmsg.payload = [{\n  series: series,\n  data: data,\n  labels: labels\n}];\nreturn msg;\n",
+        "outputs": 1,
+        "x": 780,
+        "y": 560,
+        "wires": [
+            [
+                "a5876a9d592c699a"
+            ]
+        ]
+    },
+    {
+        "id": "a5876a9d592c699a",
+        "type": "ui_chart",
+        "z": "f2341ea2c16839d8",
+        "name": "Hourly Flow Chart",
+        "group": "grp_charts",
+        "order": 2,
+        "width": "12",
+        "height": "6",
+        "label": "Biểu đồ Lưu Lượng Vào / Ra theo giờ",
+        "chartType": "bar",
+        "legend": "true",
+        "xformat": "HH:mm",
+        "interpolate": "linear",
+        "nodata": "Không có dữ liệu",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#28a745",
+            "#0056b3",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "x": 990,
+        "y": 560,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1b5f5b883f503ea6",
+        "type": "ui_template",
+        "z": "f2341ea2c16839d8",
+        "group": "grp_weekly",
+        "name": "Date Range Picker",
+        "order": 1,
+        "width": "12",
+        "height": "2",
+        "format": "<div style=\"display: flex; align-items: center; justify-content: center; gap: 15px; padding: 15px; background: #ffffff; border-radius: 8px; border: 1px solid #c0c0c0; box-shadow: 0 4px 10px rgba(0,0,0,0.1);\">\n  <label style=\"font-weight: bold; color: #0056b3; font-size: 16px;\">TỪ NGÀY:</label>\n  <input type=\"date\" id=\"repStart\" style=\"padding: 8px; border-radius: 6px; border: 2px solid #0056b3; outline: none; cursor: pointer;\">\n  <label style=\"font-weight: bold; color: #0056b3; font-size: 16px; margin-left: 20px;\">ĐẾN NGÀY:</label>\n  <input type=\"date\" id=\"repEnd\" style=\"padding: 8px; border-radius: 6px; border: 2px solid #0056b3; outline: none; cursor: pointer;\">\n</div>\n<script>\n(function(scope) {\n  setTimeout(function() {\n    var elS = document.getElementById('repStart');\n    var elE = document.getElementById('repEnd');\n    function onChange() {\n        if(elS.value && elE.value) {\n            scope.send({payload: {start: elS.value, end: elE.value}});\n        }\n    }\n    elS.addEventListener('change', onChange);\n    elE.addEventListener('change', onChange);\n    if(!elS.value || !elE.value) {\n      var tz = (new Date()).getTimezoneOffset() * 60000;\n      var today = new Date(Date.now() - tz).toISOString().split('T')[0];\n      var lastWeek = new Date(Date.now() - tz - 6*24*3600*1000).toISOString().split('T')[0];\n      elS.value = lastWeek;\n      elE.value = today;\n      scope.send({payload: {start: lastWeek, end: today}});\n    }\n  }, 500);\n})(scope);\n</script>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "x": 170,
+        "y": 660,
+        "wires": [
+            [
+                "4b0c0f014c50e687"
+            ]
+        ]
+    },
+    {
+        "id": "540cd621c1444aae",
+        "type": "inject",
+        "z": "f2341ea2c16839d8",
+        "name": "Poll Report 5s",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "poll",
+        "payloadType": "str",
+        "x": 180,
+        "y": 740,
+        "wires": [
+            [
+                "4b0c0f014c50e687"
+            ]
+        ]
+    },
+    {
+        "id": "4b0c0f014c50e687",
+        "type": "function",
+        "z": "f2341ea2c16839d8",
+        "name": "Build Report Query",
+        "func": "var s = flow.get('repStart');\nvar e = flow.get('repEnd');\nif (msg.payload && typeof msg.payload === 'object' && msg.payload.start) {\n    s = msg.payload.start;\n    e = msg.payload.end;\n    flow.set('repStart', s);\n    flow.set('repEnd', e);\n}\nif (!s || !e) {\n    var tz = (new Date()).getTimezoneOffset() * 60000;\n    e = new Date(Date.now() - tz).toISOString().split('T')[0];\n    s = new Date(Date.now() - tz - 6*24*3600*1000).toISOString().split('T')[0];\n    flow.set('repStart', s);\n    flow.set('repEnd', e);\n}\nmsg.topic = \"SELECT date(time) as d, SUM(CASE WHEN action='VAO' THEN 1 ELSE 0 END) as vao, SUM(CASE WHEN action='RA' THEN 1 ELSE 0 END) as ra FROM security_logs WHERE date(time) >= '\" + s + \"' AND date(time) <= '\" + e + \"' GROUP BY d ORDER BY d ASC;\";\nmsg.payload = null;\nreturn msg;",
+        "outputs": 1,
+        "x": 410,
+        "y": 700,
+        "wires": [
+            [
+                "410ebf12aab1ce4a"
+            ]
+        ]
+    },
+    {
+        "id": "410ebf12aab1ce4a",
+        "type": "sqlite",
+        "z": "f2341ea2c16839d8",
+        "mydb": "sqlite_db",
+        "sqlquery": "msg.topic",
+        "sql": "",
+        "name": "Query Weekly",
+        "x": 620,
+        "y": 700,
+        "wires": [
+            [
+                "08fee573d8ecd9f5"
+            ]
+        ]
+    },
+    {
+        "id": "08fee573d8ecd9f5",
+        "type": "function",
+        "z": "f2341ea2c16839d8",
+        "name": "Format Weekly Stats",
+        "func": "var rows = msg.payload;\nvar totalVaoTuan = 0;\nvar totalRaTuan = 0;\n\nvar totalVaoHomNay = 0;\nvar totalRaHomNay = 0;\n\nvar maxDay = null;\nvar maxTotal = -1;\nvar minDay = null;\nvar minTotal = 9999999;\n\nvar tzOffset = (new Date()).getTimezoneOffset() * 60000;\nvar todayStr = (new Date(Date.now() - tzOffset)).toISOString().split('T')[0];\n\nif (rows && rows.length > 0) {\n    rows.forEach(function(r) {\n        var dayTotal = r.vao + r.ra;\n        totalVaoTuan += r.vao;\n        totalRaTuan += r.ra;\n        \n        if (r.d === todayStr) {\n            totalVaoHomNay = r.vao;\n            totalRaHomNay = r.ra;\n        }\n        \n        if (dayTotal > maxTotal) {\n            maxTotal = dayTotal;\n            maxDay = r.d;\n        }\n        \n        if (dayTotal < minTotal && dayTotal >= 0) {\n            minTotal = dayTotal;\n            minDay = r.d;\n        }\n    });\n}\n\nfunction formatDay(dateStr) {\n    if (!dateStr) return 'Chưa có';\n    var p = dateStr.split('-');\n    if (p.length !== 3) return dateStr;\n    return p[2] + '/' + p[1] + '/' + p[0];\n}\n\nvar html = `\n<div style=\"background:#fff; border:1px solid #c0c0c0; border-radius:8px; padding:20px; box-shadow:0 4px 10px rgba(0,0,0,0.1); font-family: 'Segoe UI', sans-serif;\">\n  <h3 style=\"color:#0056b3; font-weight:bold; margin-top:0; border-bottom:2px solid #0056b3; padding-bottom:10px;\">BÁO CÁO TỔNG HỢP (Tùy Chọn)</h3>\n  \n  <div style=\"display:flex; justify-content:space-between; gap:20px; margin-top:20px;\">\n    \n    <div style=\"flex:1; background:#f8f9fa; border-radius:6px; padding:15px; text-align:center; border:1px solid #ddd;\">\n      <h4 style=\"margin:0 0 10px 0; color:#555;\">HÔM NAY (${formatDay(todayStr)})</h4>\n      <div style=\"font-size:18px;\">\n        <span style=\"color:#28a745; font-weight:bold;\">Vào: ${totalVaoHomNay}</span> | \n        <span style=\"color:#0056b3; font-weight:bold;\">Ra: ${totalRaHomNay}</span>\n      </div>\n      <div style=\"font-size:24px; font-weight:bold; margin-top:10px;\">Tổng: ${totalVaoHomNay + totalRaHomNay}</div>\n    </div>\n    \n    <div style=\"flex:1; background:#e6f0ff; border-radius:6px; padding:15px; text-align:center; border:1px solid #b3d4ff;\">\n      <h4 style=\"margin:0 0 10px 0; color:#0056b3;\">TRONG KỲ BÁO CÁO</h4>\n      <div style=\"font-size:18px;\">\n        <span style=\"color:#28a745; font-weight:bold;\">Vào: ${totalVaoTuan}</span> | \n        <span style=\"color:#0056b3; font-weight:bold;\">Ra: ${totalRaTuan}</span>\n      </div>\n      <div style=\"font-size:24px; font-weight:bold; margin-top:10px; color:#0056b3;\">Tổng: ${totalVaoTuan + totalRaTuan}</div>\n    </div>\n    \n  </div>\n  \n  <div style=\"margin-top:20px; background:#fdfdfe; border-left:4px solid #ff9900; padding:10px 15px; border-radius:4px;\">\n    <div style=\"margin-bottom:8px;\"><strong>🔥 Ngày đông nhất:</strong> <span style=\"color:#ff6600;\">${formatDay(maxDay)}</span> (với <b>${maxTotal === -1 ? 0 : maxTotal}</b> lượt qua lại)</div>\n    <div><strong>🧊 Ngày vắng nhất:</strong> <span style=\"color:#17a2b8;\">${formatDay(minDay)}</span> (với <b>${minTotal === 9999999 ? 0 : minTotal}</b> lượt qua lại)</div>\n  </div>\n</div>\n`;\n\nmsg.payload = html;\nreturn msg;",
+        "outputs": 1,
+        "x": 820,
+        "y": 700,
+        "wires": [
+            [
+                "2dab2e26e694ba3a"
+            ]
+        ]
+    },
+    {
+        "id": "2dab2e26e694ba3a",
+        "type": "ui_template",
+        "z": "f2341ea2c16839d8",
+        "group": "grp_weekly",
+        "name": "Weekly Stats View",
+        "order": 2,
+        "width": "12",
+        "height": "7",
+        "format": "<div ng-bind-html=\"msg.payload\"></div>\n<div style=\"text-align: center; padding: 20px;\">\n  <a href=\"/api/export-csv\" target=\"_blank\" style=\"display:inline-block; padding:12px 25px; background-color:#17a2b8; color:#fff; font-weight:bold; text-decoration:none; border-radius:5px; font-size:16px; box-shadow:0 4px 6px rgba(0,0,0,0.1); transition: 0.3s;\" onmouseover=\"this.style.backgroundColor='#138496'\" onmouseout=\"this.style.backgroundColor='#17a2b8'\">\n    📥 TẢI XUỐNG DỮ LIỆU CSV (BÁO CÁO)\n  </a>\n</div>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "x": 1050,
+        "y": 700,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "fa7dd3806c9226ad",
+        "type": "http in",
+        "z": "f2341ea2c16839d8",
+        "name": "GET /api/export-csv",
+        "url": "/api/export-csv",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 230,
+        "y": 940,
+        "wires": [
+            [
+                "602d835841ea611c"
+            ]
+        ]
+    },
+    {
+        "id": "602d835841ea611c",
+        "type": "sqlite",
+        "z": "f2341ea2c16839d8",
+        "mydb": "sqlite_db",
+        "sqlquery": "fixed",
+        "sql": "SELECT id, time, action, distance, energy FROM security_logs ORDER BY id ASC;",
+        "name": "Read All Logs",
+        "x": 450,
+        "y": 940,
+        "wires": [
+            [
+                "7712ea90b5cd4823"
+            ]
+        ]
+    },
+    {
+        "id": "7712ea90b5cd4823",
+        "type": "function",
+        "z": "f2341ea2c16839d8",
+        "name": "Convert to CSV String",
+        "func": "var rows = msg.payload;\nvar csv = \"ID,THOI_GIAN,SU_KIEN,KHOANG_CACH_CM,NANG_LUONG_%\\n\";\n\nif (rows && rows.length > 0) {\n    rows.forEach(function(r) {\n        csv += r.id + \",\" + r.time + \",\" + r.action + \",\" + r.distance + \",\" + r.energy + \"\\n\";\n    });\n}\n\nmsg.payload = csv;\nmsg.headers = {\n    \"Content-Type\": \"text/csv; charset=utf-8\",\n    \"Content-Disposition\": \"attachment; filename=\\\"security_logs_export.csv\\\"\"\n};\nreturn msg;",
+        "outputs": 1,
+        "x": 660,
+        "y": 940,
+        "wires": [
+            [
+                "579f40705dfda958"
+            ]
+        ]
+    },
+    {
+        "id": "579f40705dfda958",
+        "type": "http response",
+        "z": "f2341ea2c16839d8",
+        "name": "HTTP Response",
+        "statusCode": "200",
+        "headers": {},
+        "x": 880,
+        "y": 940,
+        "wires": []
+    },
+    {
+        "id": "0e15122047b92b02",
+        "type": "inject",
+        "z": "f2341ea2c16839d8",
+        "name": "Poll logs 2s",
+        "props": [
+            {
+                "p": "topic",
+                "v": "SELECT * FROM security_logs ORDER BY id DESC LIMIT 50",
+                "vt": "str"
+            }
+        ],
+        "repeat": "2",
+        "once": true,
+        "onceDelay": "3",
+        "x": 230,
+        "y": 1000,
+        "wires": [
+            [
+                "8d0cd20b73e53db4"
+            ]
+        ]
+    },
+    {
+        "id": "8d0cd20b73e53db4",
+        "type": "sqlite",
+        "z": "f2341ea2c16839d8",
+        "mydb": "sqlite_db",
+        "sqlquery": "msg.topic",
+        "sql": "",
+        "name": "Read Logs",
+        "x": 410,
+        "y": 1000,
+        "wires": [
+            [
+                "03d68c3c2d9beb40"
+            ]
+        ]
+    },
+    {
+        "id": "03d68c3c2d9beb40",
+        "type": "function",
+        "z": "f2341ea2c16839d8",
+        "name": "Format Data Grid",
+        "func": "var rows = msg.payload;\nif (!rows || rows.length === 0) {\n  msg.payload = '<div style=\"padding:20px;color:#666;text-align:center;font-family:sans-serif;background:#f8f9fa;border:1px solid #ddd;border-radius:5px;\">Chưa có dữ liệu nhật ký</div>';\n  return msg;\n}\n\nvar html = '<div style=\"background:#fff; border:1px solid #ddd; border-radius:5px; padding:10px; font-family:sans-serif; max-height:280px; overflow-y:auto; box-shadow:0 2px 5px rgba(0,0,0,0.05);\">';\nhtml += '<table style=\"width:100%;border-collapse:collapse;font-size:14px;color:#333;\">';\nhtml += '<tr style=\"background:#0056b3;color:#fff;border-bottom:2px solid #004289;text-align:left;\">';\nhtml += '<th style=\"padding:10px\">ID</th><th style=\"padding:10px\">THỜI GIAN</th><th style=\"padding:10px\">SỰ KIỆN</th><th style=\"padding:10px;text-align:center;\">KHOẢNG CÁCH</th><th style=\"padding:10px;text-align:center;\">NĂNG LƯỢNG</th></tr>';\n\nrows.forEach(function(r) {\n  var evtColor = r.action === 'ALARM_STATIC' ? '#dc3545' : (r.action === 'VAO' ? '#28a745' : '#0056b3');\n  var evtText = r.action === 'ALARM_STATIC' ? 'CẢNH BÁO ĐỨNG IM' : (r.action === 'VAO' ? 'KHÁCH VÀO' : (r.action === 'RA' ? 'KHÁCH RA' : r.action));\n  \n  html += '<tr style=\"border-bottom:1px solid #eee; transition: background 0.2s;\" onmouseover=\"this.style.background=\\'#f4f6f9\\'\" onmouseout=\"this.style.background=\\'transparent\\'\">';\n  html += '<td style=\"padding:10px;color:#666;\">#' + r.id + '</td>';\n  html += '<td style=\"padding:10px;color:#555;\">' + r.time + '</td>';\n  html += '<td style=\"padding:10px;color:' + evtColor + ';font-weight:bold;\">' + evtText + '</td>';\n  html += '<td style=\"padding:10px;text-align:center;\">' + r.distance + ' cm</td>';\n  html += '<td style=\"padding:10px;text-align:center;\">' + r.energy + ' %</td>';\n  html += '</tr>';\n});\nhtml += '</table></div>';\n\nmsg.payload = html;\nreturn msg;",
+        "outputs": 1,
+        "x": 610,
+        "y": 1000,
+        "wires": [
+            [
+                "c890b1ddcb259398"
+            ]
+        ]
+    },
+    {
+        "id": "c890b1ddcb259398",
+        "type": "ui_template",
+        "z": "f2341ea2c16839d8",
+        "group": "grp_admin",
+        "name": "Log Data Grid",
+        "order": 1,
+        "width": "12",
+        "height": "7",
+        "format": "<div ng-bind-html=\"msg.payload\"></div>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "x": 820,
+        "y": 1000,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8383bd1c0cb238e1",
+        "type": "ui_button",
+        "z": "f2341ea2c16839d8",
+        "name": "Reset Data",
+        "group": "grp_admin",
+        "order": 2,
+        "width": "12",
+        "height": "1",
+        "passthru": false,
+        "label": "XÓA TOÀN BỘ DỮ LIỆU CŨ",
+        "tooltip": "Xóa trắng nhật ký và biểu đồ",
+        "color": "#fff",
+        "bgcolor": "#dc3545",
+        "icon": "delete",
+        "payload": "confirm_reset",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 430,
+        "y": 400,
+        "wires": [
+            [
+                "347d43306a20b295",
+                "7a594c208e83df65"
+            ]
+        ]
+    },
+    {
+        "id": "7a594c208e83df65",
+        "type": "mqtt out",
+        "z": "f2341ea2c16839d8",
+        "name": "Send Reset to ESP32",
+        "topic": "gate/control",
+        "qos": "1",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "broker_cfg",
+        "x": 860,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "347d43306a20b295",
+        "type": "function",
+        "z": "f2341ea2c16839d8",
+        "name": "Reset Query",
+        "func": "msg.topic = 'DELETE FROM security_logs;';\nmsg.payload = '{\"cmd\":\"reset\"}';\nreturn msg;",
+        "outputs": 1,
+        "x": 630,
+        "y": 360,
+        "wires": [
+            [
+                "f0eafd20b06048bd",
+                "7a594c208e83df65"
+            ]
+        ]
+    },
+    {
+        "id": "05b6ca1b59cb9228",
+        "type": "inject",
+        "z": "f2341ea2c16839d8",
+        "name": "test",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "test",
+        "payloadType": "str",
+        "x": 90,
+        "y": 300,
+        "wires": [
+            [
+                "13e59061e57c9e1a"
+            ]
+        ]
+    },
+    {
+        "id": "13e59061e57c9e1a",
+        "type": "function",
+        "z": "f2341ea2c16839d8",
+        "name": "Generate Bulk SQL",
+        "func": "var queries = [];\nvar now = new Date();\nfor(var i=0; i<300; i++) {\n  var d = new Date(now.getTime() - Math.random() * 7 * 24 * 3600 * 1000);\n  var isVao = Math.random() > 0.45;\n  var act = isVao ? \"VAO\" : (Math.random() > 0.8 ? \"ALARM_STATIC\" : \"RA\");\n  \n  var tzOffset = d.getTimezoneOffset() * 60000;\n  var localISOTime = (new Date(d - tzOffset)).toISOString().replace('T', ' ').substring(0, 19);\n  \n  var dist = Math.floor(Math.random()*150) + 50;\n  var enrg = Math.floor(Math.random()*60) + 40;\n  \n  queries.push(\"('\" + localISOTime + \"', '\" + act + \"', \" + dist + \", \" + enrg + \")\");\n}\nmsg.topic = \"INSERT INTO security_logs (time, action, distance, energy) VALUES \" + queries.join(\",\");\nreturn msg;",
+        "outputs": 1,
+        "x": 410,
+        "y": 300,
+        "wires": [
+            [
+                "f0eafd20b06048bd"
+            ]
+        ]
+    },
+    {
+        "id": "broker_cfg",
+        "type": "mqtt-broker",
+        "name": "localhost:1884",
+        "broker": "127.0.0.1",
+        "port": "1884",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {}
+    },
+    {
+        "id": "grp_overview",
+        "type": "ui_group",
+        "name": "TỔNG QUAN HỆ THỐNG",
+        "tab": "dashboard_tab",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false
+    },
+    {
+        "id": "grp_radar",
+        "type": "ui_group",
+        "name": "THÔNG SỐ CẢM BIẾN RADAR (Real-time)",
+        "tab": "dashboard_tab",
+        "order": 2,
+        "disp": true,
+        "width": "12",
+        "collapse": false
+    },
+    {
+        "id": "grp_counter",
+        "type": "ui_group",
+        "name": "THỐNG KÊ LƯỢNG KHÁCH",
+        "tab": "dashboard_tab",
+        "order": 3,
+        "disp": true,
+        "width": "12",
+        "collapse": false
+    },
+    {
+        "id": "sqlite_db",
+        "type": "sqlitedb",
+        "db": "security_gate.db",
+        "mode": "RWC"
+    },
+    {
+        "id": "grp_charts",
+        "type": "ui_group",
+        "name": "THỐNG KÊ LƯU LƯỢNG (Biểu đồ theo giờ)",
+        "tab": "dashboard_tab",
+        "order": 5,
+        "disp": true,
+        "width": "12",
+        "collapse": false
+    },
+    {
+        "id": "grp_weekly",
+        "type": "ui_group",
+        "name": "BÁO CÁO TỔNG HỢP & XUẤT DỮ LIỆU",
+        "tab": "dashboard_tab",
+        "order": 4,
+        "disp": true,
+        "width": "12",
+        "collapse": false
+    },
+    {
+        "id": "grp_admin",
+        "type": "ui_group",
+        "name": "NHẬT KÝ HOẠT ĐỘNG (Real-time)",
+        "tab": "dashboard_tab",
+        "order": 6,
+        "disp": true,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "dashboard_tab",
+        "type": "ui_tab",
+        "name": "Cổng Giám sát",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "19d4a92be037da59",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-contrib-aedes": "1.2.0",
+            "node-red-dashboard": "3.6.6",
+            "node-red-node-sqlite": "2.0.1"
+        }
+    }
+]
